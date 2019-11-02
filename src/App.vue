@@ -56,17 +56,53 @@
   <h1 style="color: #42b983;">LIST OF ALL OF USERS..</h1>
   
   <ul v-for="user in users" :key="user.id" class="list-group">
-    <li class="list-group-item d-flex justify-content-between align-items-center">
+    <li class="list-group-item d-flex  align-items-center">
 	{{user.name}}
-	<button @click="edit(user)" class="badge badge-secondary badge-pill" style="float: left"></button>
-    <button style="color: red" type="button" class="close" aria-label="Close" @click="del(user)"><span aria-hidden="true">&times;</span></button>
-	<button @click="showDetail(user)" class="badge"><span aria-hidden="true">&times;</span></button>
+	<div style="float: left display: inline-block; margin-left: auto;">
+	<button @click="edit(user)" class="mr-1" style="padding: 0; border: none; background: none;"><img src="./assets/edit.png" style="height: 17px;"></button>    
+	<button @click="showDetail(user)" style="padding: 0; border: none; background: none;"><img src="./assets/detail.png" style="height: 17px;" class="mr-3"></button>
+	<button style="color: red adding: 0; border: none; background: none;" type="button" aria-label="Close" @click="del(user)" >x</button>
+	</div>
 	</li>
-  </ul>
+  </ul>  
+  
+   <div v-if="users" class="mt-2">
+	<select v-model="pageParam.limit" class="mr-1">
+	<option disabled value="">Please select one</option>
+	<option>10</option>
+	<option>20</option>
+	<option>30</option>
+	</select>
+	<b-button type="button" variant="success" size="sm" :disabled="pageParam.page <=1" @click="prevPage" class="mr-1">
+    Previous
+	</b-button>
+	<b-button type="button" variant="success" size="sm" :disabled="pageParam.page >= 4" @click="nextPage">
+    Next
+    </b-button>
+    </div>
   
   </div>
   </div>
-  
+ 
+	<div v-if="detail" :content="detailData" class="card container mb-3 user-detail">
+	<div class="card-body" size="12">
+	<h1>{{detailData.name}}</h1>
+	<div v-if="detailData.gender === 'Female'">
+	<b-img left src="./assets/female.jpg" alt="avatar image" class="avatar"></b-img>
+	</div>
+	<div v-else>
+    <b-img left src="./assets/male.jpg" alt="avatar image" class="avatar"></b-img>
+    </div>
+	<p class="di-sudut">id: {{detailData.id}}</p>
+	<div class="keterangan" >
+	<p>{{detailData.email}}</p>
+	<p>{{detailData.phone}}</p>
+	<p>{{detailData.gender}}</p>
+	<p>{{detailData.is_active}}</p>
+	<p>{{detailData.updated_at}}</p>
+	</div>
+	</div>
+	</div>
   
   </div>
 </template>
@@ -77,6 +113,7 @@ import axios from 'axios'
 export default {
   data(){
     return{
+	    
         masuk: {
           email: '',
           password: ''
@@ -229,4 +266,31 @@ export default {
     }
   }
 }
+
+.avatar {
+  vertical-align: middle;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.user-detail {
+  position: relative;
+}
+
+.di-sudut {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #42b983;
+}
+
+.keterangan p {
+  text-align: end;
+  padding-right: 50px;
+  margin-bottom: 0px;
+}
+
 </style>
