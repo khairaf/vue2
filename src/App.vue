@@ -19,7 +19,12 @@
   </div>
   </div>
   
-  <p style="color: red" >{{message}}</p> 
+  <div v-if="alert" class="alert">  
+  <strong>Danger!</strong> <p>{{message}}</p>
+  </div>
+  <div v-if="greenAlert" class="green">  
+  <strong>Yippie!</strong> <p>{{message}}</p>
+  </div>
   
   <div class="card container mb-3" >
   <div class="card-body" size="12">
@@ -98,6 +103,7 @@
 	<p>{{detailData.email}}</p>
 	<p>{{detailData.phone}}</p>
 	<p>{{detailData.gender}}</p>
+	<p>{{detailData.address}}</p>
 	<p>{{detailData.is_active}}</p>
 	<p>{{detailData.updated_at}}</p>
 	</div>
@@ -136,7 +142,9 @@ export default {
 		  page: 1,
 		  limit: 10
 		},		
-		message: ''
+		message: '',
+		alert: false,
+		greenAlert: false,
     }
   },
   mounted() {
@@ -152,8 +160,9 @@ export default {
 		this.users = res.data.data
       }).catch ((err) => {
         console.log("errornya apa?", err);
-        this.message = "Hai you must hit the login button"
-		setTimeout(() => this.message ="", 3000)
+		this.alert= true
+        this.message = "Hai, something is wrong, you might need to login first"
+		setTimeout(() => this.alert=false, 4000)
       })
     },
 	auto() {
@@ -170,21 +179,27 @@ export default {
 		  this.masuk = {}
       }).catch ((err) => {
         console.log("errornya apa?", err);
-        this.message = "Hai you must hit the login button"
-		setTimeout(() => this.message ="", 3000)
+		this.alert=true;
+        this.message = "Hai, something is wrong, login with the correct account, or hit the easy login button for easy login"
+		setTimeout(() => this.alert =false, 3000)
       })
     },
 	add(){
 	  console.log("form ",this.form)
       axios.post('https://sample.mikaapp.id/api/users', this.form, { headers: {"Authorization" : `Bearer ${this.token}`} }).then(res => {
-          this.load()
+          window.scrollTo(0,0);
+		  this.load()
+		  
+		  this.greenAlert=true
           this.message = "A new user added to the list"
-		  setTimeout(() => {this.message =""; this.form = {} }, 3000)
+		  setTimeout(() => {this.greenAlert=false; this.form = {} }, 3000)
 		  console.log("datanya :", res);
       }).catch ((err) => {
         console.log("tes err", err);
+		window.scrollTo(0,0);
+		this.alert=true
         this.message = "Hai you must provide the correct input"
-		setTimeout(() => this.message ="", 3000)
+		setTimeout(() => this.alert=false, 3000)
       })
     },
     edit(user){ 
@@ -192,17 +207,27 @@ export default {
         this.form = user
 		console.log("edit: ", user)
     },
+    alertStyles(){
+      return {
+        backgroundColor : 'green'
+      }
+    },
+		
     update(form){ 
 	   console.log(form)
 	   let id = form.id
-	   console.log("aidi", id, "thisformname", this.form.name)
+	   console.log("id", id, "thisformname", this.form.name)
        return axios.put(`https://sample.mikaapp.id/api/users/${id}`, this.form.name, { headers: {"Authorization" : `Bearer ${this.token}`} }).then(res => {
 	    console.log(res);
-        
+        window.scrollTo(0,0);
 		this.form = res.data.data
         this.updateSubmit = false
+		
+		
+		this.greenAlert = true
 		this.message = `Data for user with id: ${id} updated`
-		setTimeout(() => {this.message =""; this.form = {} }, 3000)
+		setTimeout(() => {this.greenAlert = false; this.form = {} }, 3000)
+		
       }).catch((err) => {
         console.log("error when updating", err);
     
@@ -225,6 +250,7 @@ export default {
           this.detail =true
           console.log(res)
 		  this.detailData = res.data.data
+		  setTimeout(() => window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight), 1000)
       }).catch((err) => {
         console.log(err);
       })
@@ -292,5 +318,18 @@ export default {
   padding-right: 50px;
   margin-bottom: 0px;
 }
+
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+ }
+ 
+.green {
+  padding: 20px;
+  background-color:green;
+  color: white;
+ }
+
 
 </style>
