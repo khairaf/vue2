@@ -20,3 +20,4 @@ Deploy to netlify. See [this](https://sad-ritchie-735483.netlify.com/)
 
 ### Print screen
 ![Screenshot](screentprint.png)
+![Screenshot2](screentprint2.png)

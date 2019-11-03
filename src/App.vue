@@ -327,7 +327,7 @@ export default {
  
 .green {
   padding: 20px;
-  background-color:green;
+  background-color:#42b983;
   color: white;
  }
 
