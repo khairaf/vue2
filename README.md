@@ -1,4 +1,4 @@
-# frontcrud
+# fronttrana
 
 install nodejs first [here](https://nodejs.org/en/download/)
 
